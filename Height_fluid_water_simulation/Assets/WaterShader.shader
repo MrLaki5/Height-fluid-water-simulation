@@ -22,6 +22,7 @@
             #pragma fragment frag
             
             #include "UnityCG.cginc"
+            #include "Lighting.cginc"
 
             struct appdata
             {
@@ -62,6 +63,16 @@
                 // If angle between view and normal is smaller, alfa is bigger
                 col.a = (1-dot(viewDir, i.normal));
                 col = col * _WaterColor;
+                
+                
+                float3 lightDir = normalize(ObjSpaceLightDir(float4(i.vertexPosInObjSpace, 1))).xyz;
+                float3 reflection = reflect(-lightDir, normalize(i.normal));
+                float specular = pow(max(0, dot(viewDir, reflection)), 25);
+                
+                col.r += specular*2;
+                col.g += specular*2;
+                col.b += specular*2;
+                
                 return col;
             }
             ENDCG
