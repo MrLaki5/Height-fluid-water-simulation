@@ -9,7 +9,7 @@ public class MashGenerator : MonoBehaviour
     Vector3[] vertices;
     public int mashSize = 10;
     public int[] triangles;
-    public float triangle_size = 0.2f;
+    public float triangle_size = 1f;
 
     // Start is called before the first frame update
     void Start()
@@ -25,7 +25,7 @@ public class MashGenerator : MonoBehaviour
         { 
             for ( int j = 0; j < (mashSize + 1); j++)
             {
-                vertices[i * (mashSize + 1) + j] = new Vector3(vertex_d2, vertex_d1, vertex_d3);
+                vertices[i * (mashSize + 1) + j] = new Vector3(vertex_d2, vertex_d3, vertex_d1);
                 vertex_d2 += triangle_size;
             }
             vertex_d1 += triangle_size;
@@ -68,6 +68,7 @@ public class MashGenerator : MonoBehaviour
         waterMash.Clear();
         waterMash.vertices = vertices;
         waterMash.triangles = triangles;
+        waterMash.RecalculateNormals();
 
         GetComponent<MeshFilter>().sharedMesh = waterMash;
     }
@@ -75,6 +76,22 @@ public class MashGenerator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        float speed = 5.0f;
+        if (Input.GetKey(KeyCode.RightArrow))
+        {
+            transform.Translate(new Vector3(speed * Time.deltaTime, 0, 0));
+        }
+        if (Input.GetKey(KeyCode.LeftArrow))
+        {
+            transform.Translate(new Vector3(-speed * Time.deltaTime, 0, 0));
+        }
+        if (Input.GetKey(KeyCode.DownArrow))
+        {
+            transform.Translate(new Vector3(0, -speed * Time.deltaTime, 0));
+        }
+        if (Input.GetKey(KeyCode.UpArrow))
+        {
+            transform.Translate(new Vector3(0, speed * Time.deltaTime, 0));
+        }
     }
 }

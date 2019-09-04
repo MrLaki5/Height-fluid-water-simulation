@@ -2,13 +2,19 @@
 {
     Properties
     {
-        _MainTex ("Texture", 2D) = "red" {}
+        _CubeMap ("Cube map", CUBE) = "white" {}
+        _WaterColor ("Water color", Color) = (90, 188, 216)
+        _Transparency("Transparency", Range(0, 1)) = 1.0
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque" }
+        Tags { "Queue" = "Transparent" "LightMode" = "ForwardBase" }
         LOD 100
-
+        
+        Blend SrcAlpha OneMinusSrcAlpha
+        
+        ZWrite off
+        
         Pass
         {
             CGPROGRAM
@@ -20,30 +26,42 @@
             struct appdata
             {
                 float4 vertex : POSITION;
-                float2 uv : TEXCOORD0;
+                float3 normal : NORMAL;
             };
 
             struct v2f
             {
-                float2 uv : TEXCOORD0;
-                UNITY_FOG_COORDS(1)
+                float3 normal : NORMAL;
+                float3 vertexPosInObjSpace : TEXCOORD0;
                 float4 vertex : SV_POSITION;
             };
 
-            sampler2D _MainTex;
-            float4 _MainTex_ST;
+            samplerCUBE _CubeMap;
+            float _Transparency;
+            float4 _WaterColor;
             
             v2f vert (appdata v)
             {
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
-                o.uv = v.uv;
+                o.normal = v.normal;
+                o.vertexPosInObjSpace = v.vertex;
                 return o;
             }
             
             fixed4 frag (v2f i) : SV_Target
             {
-                fixed4 col = tex2D(_MainTex, i.uv);
+                // Calculate view dir vector in object space
+                float3 viewDir = normalize(ObjSpaceViewDir(float4(i.vertexPosInObjSpace, 1))).xyz;
+                // We get reflection with reflecting vector that gets out of fragment to camera over normal of fragment.
+                float3 uv = reflect( -viewDir, normalize(i.normal));
+                // Move it from object space to world space
+                uv = mul(UNITY_MATRIX_M, float4(uv, 0));
+                // Sample cube map with vector we got
+                fixed4 col = texCUBE(_CubeMap, uv);
+                // If angle between view and normal is smaller, alfa is bigger
+                col.a = (1-dot(viewDir, i.normal));
+                col = col * _WaterColor;
                 return col;
             }
             ENDCG
