@@ -2,6 +2,7 @@
 {
     Properties
     {
+        _Tex("Texture", 2D) = "white" {}
         _CubeMap ("Cube map", CUBE) = "white" {}
         _WaterColor ("Water color", Color) = (90, 188, 216)
         _Transparency("Transparency", Range(0, 1)) = 1.0
@@ -28,18 +29,21 @@
             {
                 float4 vertex : POSITION;
                 float3 normal : NORMAL;
+                float2 uv : TEXCOORD0;
             };
 
             struct v2f
             {
                 float3 normal : NORMAL;
-                float3 vertexPosInObjSpace : TEXCOORD0;
+                float3 vertexPosInObjSpace : TEXCOORD1;
                 float4 vertex : SV_POSITION;
+                float2 uv : TEXCOORD0;
             };
 
             samplerCUBE _CubeMap;
             float _Transparency;
             float4 _WaterColor;
+            sampler2D _Tex;
             
             v2f vert (appdata v)
             {
@@ -47,6 +51,7 @@
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.normal = v.normal;
                 o.vertexPosInObjSpace = v.vertex;
+                o.uv = v.uv;
                 return o;
             }
             
@@ -72,6 +77,9 @@
                 col.r += specular*2;
                 col.g += specular*2;
                 col.b += specular*2;
+                
+                
+                col = tex2D(_Tex, i.uv);
                 
                 return col;
             }
