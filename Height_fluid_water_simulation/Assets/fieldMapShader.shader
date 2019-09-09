@@ -4,6 +4,8 @@
     {
         _Color ("Color", Color) = (1, 0, 0, 1)
         _Tex("InputTex", 2D) = "white" {}
+        _Click_x("Click X", Range(-1, 1)) = -1.0
+        _Click_y("Click Y", Range(-1, 1)) = -1.0
      }
 
      SubShader
@@ -21,6 +23,8 @@
 
             float4      _Color;
             sampler2D   _Tex;
+            float _Click_x;
+            float _Click_y;
             
             float4 frag(v2f_customrendertexture IN) : COLOR
             {
@@ -49,16 +53,18 @@
                 
                 //height_curr = float4(0.0f, 0.0f, 0.0f, 1.0f);
                 
-                if (IN.localTexcoord.y >= 0.5f && IN.localTexcoord.y <= 0.6f && IN.localTexcoord.x >= 0.5f && IN.localTexcoord.x <= 0.6f){
+                if (_Click_x != -1.0 && _Click_y != -1.0 && (abs(IN.localTexcoord.y - _Click_y) <= 0.01f) && (abs(IN.localTexcoord.x - _Click_x) <= 0.01f))
+                {
                     height_curr.r = 1.0f;
                     height_curr.g = 0.0f;
                 }
+                
                 //else{
                 //    height_curr = float4(0.0f, 0.0f, 0.0f, 1.0f);
                 //}
                 
                 return height_curr;
-                return float4(0.0f, 0.0f, 0.0f, 1.0f);
+                //return float4(0.0f, 0.0f, 0.0f, 1.0f);
                
             }
             ENDCG
