@@ -34,6 +34,6 @@ public class BoxScript : MonoBehaviour
 
     void OnCollisionStay(Collision collisionInfo)
     {
-        print("Hello from box");
+        //print("Hello from box");
     }
 }

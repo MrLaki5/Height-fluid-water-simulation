@@ -6,6 +6,10 @@
         _Tex("InputTex", 2D) = "white" {}
         _Click_x("Click X", Range(-1, 1)) = -1.0
         _Click_y("Click Y", Range(-1, 1)) = -1.0
+        _Box_low_x("Box low X", Range(-1, 1)) = -1.0
+        _Box_low_y("Box low Y", Range(-1, 1)) = -1.0
+        _Box_high_x("Box high X", Range(-1, 1)) = -1.0
+        _Box_high_y("Box high Y", Range(-1, 1)) = -1.0
      }
 
      SubShader
@@ -25,6 +29,10 @@
             sampler2D   _Tex;
             float _Click_x;
             float _Click_y;
+            float _Box_low_x;
+            float _Box_low_y;
+            float _Box_high_x;
+            float _Box_high_y;
             
             float4 frag(v2f_customrendertexture IN) : COLOR
             {
@@ -57,6 +65,12 @@
                 {
                     height_curr.r = 1.0f;
                     height_curr.g = 0.0f;
+                }
+                
+                if (_Box_low_x != -1.0 && _Box_low_y != -1.0 && _Box_high_x != -1.0 && _Box_high_y != -1.0 && (IN.localTexcoord.x >= _Box_low_x && IN.localTexcoord.x <= _Box_high_x) && (IN.localTexcoord.y >= _Box_low_y && IN.localTexcoord.y <= _Box_high_y))
+                {
+                    height_curr.r = 1.0f;
+                    height_curr.g = 0.0f;  
                 }
                 
                 //else{

@@ -71,6 +71,7 @@ public class MashGenerator : MonoBehaviour
         waterMash.RecalculateNormals();
 
         GetComponent<MeshFilter>().sharedMesh = waterMash;
+        
     }
 
     // Update is called once per frame
