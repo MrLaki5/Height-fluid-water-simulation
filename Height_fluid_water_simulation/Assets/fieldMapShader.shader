@@ -2,7 +2,7 @@
 {
     Properties
     {
-        _Color ("Color", Color) = (1, 0, 0, 1)
+        _Wave_height("Wave height", Range(0.1, 1)) = 0.5
         _Tex("InputTex", 2D) = "white" {}
         _Click_x("Click X", Range(-1, 1)) = -1.0
         _Click_y("Click Y", Range(-1, 1)) = -1.0
@@ -24,8 +24,7 @@
             #pragma vertex CustomRenderTextureVertexShader
             #pragma fragment frag
              #pragma target 3.0
-
-            float4      _Color;
+             
             sampler2D   _Tex;
             float _Click_x;
             float _Click_y;
@@ -33,6 +32,7 @@
             float _Box_low_y;
             float _Box_high_x;
             float _Box_high_y;
+            float _Wave_height;
             
             float4 frag(v2f_customrendertexture IN) : COLOR
             {
@@ -63,13 +63,13 @@
                 float range = 0.005f;
                 if (_Click_x != -1.0 && _Click_y != -1.0 && (abs(IN.localTexcoord.y - _Click_y) <= range) && (abs(IN.localTexcoord.x - _Click_x) <= range))
                 {
-                    height_curr.r = 1.0f;
+                    height_curr.r = _Wave_height;
                     height_curr.g = 0.0f;
                 }
                 
                 if (_Box_low_x != -1.0 && _Box_low_y != -1.0 && _Box_high_x != -1.0 && _Box_high_y != -1.0 && (IN.localTexcoord.x >= _Box_low_x && IN.localTexcoord.x <= _Box_high_x) && (IN.localTexcoord.y >= _Box_low_y && IN.localTexcoord.y <= _Box_high_y))
                 {
-                    height_curr.r = 1.0f;
+                    height_curr.r = _Wave_height;
                     height_curr.g = 0.0f;  
                 }
                 
