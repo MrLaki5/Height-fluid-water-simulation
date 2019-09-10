@@ -51,4 +51,38 @@ public class ClickTrace : MonoBehaviour
         my_texture.material.SetFloat("_Click_y", clickY);
         my_texture.Update();
     }
+
+    // Check collision for boxes
+    void OnCollisionStay(Collision collisionInfo)
+    {
+        float low_x = -1.0f;
+        float high_x = -1.0f;
+        float low_y = -1.0f;
+        float high_y = -1.0f;
+        print("in function");
+        foreach (ContactPoint cp in collisionInfo.contacts)
+        {
+            RaycastHit hit;
+            float rayLength = 0.1f;
+            Ray ray = new Ray(cp.point + cp.normal * rayLength * 0.5f, -cp.normal);
+            Color C = Color.white; // default color when the raycast fails for some reason ;)
+            if (cp.thisCollider.Raycast(ray, out hit, rayLength))
+            {
+                Vector2 curr_hit = hit.textureCoord;
+                if ((low_x < 0 || low_y < 0) || (low_x > curr_hit.x && low_y > curr_hit.y))
+                {
+                    low_x = curr_hit.x;
+                    low_y = curr_hit.y;
+                }
+                if ((high_x < 0 || high_y < 0) || (high_x < curr_hit.x && high_y < curr_hit.y))
+                {
+                    high_x = curr_hit.x;
+                    high_y = curr_hit.y;
+                }
+            }
+        }
+        //Collider other_collider = collisionInfo.gameObject.GetComponent<Collider>().;
+
+        print("Low[x: " + low_x + ", y: " + low_y + "], high[x: " + high_x + ", y: " + high_y + "]");
+    }
 }

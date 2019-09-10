@@ -79,7 +79,13 @@
                 col.b += specular*2;
                 
                 
-                col = tex2D(_Tex, i.uv);
+                fixed4 col_w = tex2D(_Tex, i.uv);
+                
+                float multiplier = 1 - col_w.r;
+                
+                col.b *= multiplier;
+                col.r *= multiplier;
+                col.g *= multiplier;
                 
                 return col;
             }

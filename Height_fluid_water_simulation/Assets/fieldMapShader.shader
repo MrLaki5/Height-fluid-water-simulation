@@ -52,8 +52,8 @@
                 
                 
                 //height_curr = float4(0.0f, 0.0f, 0.0f, 1.0f);
-                
-                if (_Click_x != -1.0 && _Click_y != -1.0 && (abs(IN.localTexcoord.y - _Click_y) <= 0.01f) && (abs(IN.localTexcoord.x - _Click_x) <= 0.01f))
+                float range = 0.005f;
+                if (_Click_x != -1.0 && _Click_y != -1.0 && (abs(IN.localTexcoord.y - _Click_y) <= range) && (abs(IN.localTexcoord.x - _Click_x) <= range))
                 {
                     height_curr.r = 1.0f;
                     height_curr.g = 0.0f;
