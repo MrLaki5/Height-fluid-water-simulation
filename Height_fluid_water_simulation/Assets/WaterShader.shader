@@ -5,7 +5,7 @@
         _Tex("Texture", 2D) = "white" {}
         _CubeMap ("Cube map", CUBE) = "white" {}
         _WaterColor ("Water color", Color) = (90, 188, 216)
-        _Transparency("Transparency", Range(0, 1)) = 1.0
+        _Wave_h("Wave height", Range(0.0, 5.0)) = 2.0
     }
     SubShader
     {
@@ -41,7 +41,7 @@
             };
 
             samplerCUBE _CubeMap;
-            float _Transparency;
+            float _Wave_h;
             float4 _WaterColor;
             sampler2D _Tex;
             
@@ -59,7 +59,7 @@
             {
             
                 fixed4 col_w = tex2D(_Tex, i.uv);
-                i.vertexPosInObjSpace.y += col_w.r * 2.0f;
+                i.vertexPosInObjSpace.y += col_w.r * _Wave_h;
             
                 // Calculate view dir vector in object space
                 float3 viewDir = normalize(ObjSpaceViewDir(float4(i.vertexPosInObjSpace, 1))).xyz;
