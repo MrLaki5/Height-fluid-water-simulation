@@ -84,4 +84,4 @@ Material:
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _WaterColor: {r: 0.3529412, g: 0.7372549, b: 0.84705883, a: 0.45490196}
+    - _WaterColor: {r: 0.2951673, g: 0.7920079, b: 0.9339623, a: 0.45490196}

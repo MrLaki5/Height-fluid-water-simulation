@@ -57,6 +57,10 @@
             
             fixed4 frag (v2f i) : SV_Target
             {
+            
+                fixed4 col_w = tex2D(_Tex, i.uv);
+                i.vertexPosInObjSpace.y += col_w.r * 2.0f;
+            
                 // Calculate view dir vector in object space
                 float3 viewDir = normalize(ObjSpaceViewDir(float4(i.vertexPosInObjSpace, 1))).xyz;
                 // We get reflection with reflecting vector that gets out of fragment to camera over normal of fragment.
@@ -79,13 +83,13 @@
                 col.b += specular*2;
                 
                 
-                fixed4 col_w = tex2D(_Tex, i.uv);
+                
                 
                 float multiplier = 1 - col_w.r;
                 
-                col.b *= multiplier;
-                col.r *= multiplier;
-                col.g *= multiplier;
+                //col.b *= multiplier;
+                //col.r *= multiplier;
+                //col.g *= multiplier;
                 
                 return col;
             }
